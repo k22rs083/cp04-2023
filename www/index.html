@@ -38,6 +38,10 @@
         $('#btnC').click(function(e) {
             btnCClick(e);
         });
+        $('#btnD').click(function(e) {
+            btnDClick(e);
+        });
+
         init();
     });
     
@@ -139,7 +143,7 @@
     function analog(rest){
         var h = parseInt(rest/3600);
         var m = parseInt((rest-h*3600)/60);
-        var s = parseInt(rest-h*3600-m*60);
+        var s = parseInt(rest-(h*3600+m*60));
         clock(h,m,s,true);
 
     }
@@ -161,6 +165,7 @@
         $('#btnA').prop('disabled', false);
         $('#btnB').prop('disabled', false);
         $('#btnC').prop('disabled', false);
+        $('#btnD').prop('disabled', false);
         
     }
 
@@ -198,18 +203,30 @@
         active =false;
         period =60*parseInt($("#minute").val())+parseInt($("#second").val())+3600*parseInt($("#hour").val());
         $("#time").html("経過時間：0");
-        $("#remain").html("残り時間： "+period);
+        $("#remain").html("残り時間： "+period+"秒");
         
     }
-    
+    // ButtonDがクリックされた時の処理
+    function btnDClick(e){
+        $("#second").val("0");
+        $("#minute").val("0");
+        $("#hour").val("0");
+
+    }
+
  
     // 繰り返し実行する処理
-    function timer(){  
+    function timer(){
+
         if(active){
             var time =parseInt((new Date()- startTime)/1000);
             var rest =period - time;
+            var h =parseInt(rest/3600);
+            var m =parseInt(rest/60);
+            var s =parseInt(rest-60*m-h*3600);
+
             $("#time").html("経過時間： "+time);
-            $("#remain").html("残り時間： "+rest);
+            $("#remain").html("残り時間： "+h+"時間"+m+"分"+s+"秒"+"("+rest+"秒)");
             analog(rest);
             if(rest<0){
                 active=false;
@@ -232,8 +249,9 @@
     <button id="btnA">Start</button>  
     <button id="btnB">Stop</button>  
     <button id="btnC">Set</button>
+    <button id="btnD">Reset</button>
     <input type="number" id="minute" value=0 >
-    <input type="number" id="second" value=15 >
-    <input type="number" id="hour" value=1 >
+    <input type="number" id="second" value=0 >
+    <input type="number" id="hour" value=0 >
 </body>
 </html>
